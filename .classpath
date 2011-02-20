@@ -4,5 +4,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="C:/Exclipse/bukkit-0.0.1-SNAPSHOT.jar"/>
 	<classpathentry kind="lib" path="C:/Exclipse/imports"/>
+	<classpathentry kind="lib" path="C:/Exclipse/mysql.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

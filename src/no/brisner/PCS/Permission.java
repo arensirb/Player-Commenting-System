@@ -22,9 +22,9 @@ public class Permission {
     		if(test != null) {
     			permissionsPlugin = ((Permissions)test);
     			permissionsEnabled = true;
-    			log.log(Level.INFO, "[PrikkSystem] Permissions activated!");
+    			log.log(Level.INFO, "[PCS] Permissions activated!");
     		} else {
-    			log.log(Level.SEVERE, "[PrikkSystem] Permission not installed! PrikkSystem disabled.");
+    			log.log(Level.SEVERE, "[PCS] Permission not installed! PrikkSystem disabled.");
     			server.getPluginManager().disablePlugin(server.getPluginManager().getPlugin("PrikkSystem"));
     		}
 

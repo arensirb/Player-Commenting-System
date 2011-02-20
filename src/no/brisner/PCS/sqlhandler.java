@@ -2,9 +2,7 @@ package no.brisner.PCS;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import no.brisner.PCS.PCS;
 import no.brisner.PCS.Settings;
@@ -27,6 +25,7 @@ public class sqlhandler {
     }
 	
 	private static boolean dataTableExists(boolean sqlite) {
+
         Connection conn = null;
         ResultSet rs = null;
         try {
