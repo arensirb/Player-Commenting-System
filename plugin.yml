@@ -1,0 +1,6 @@
+name: PrikkSystem
+main: no.brisner.PrikkSystem.PrikkSystem
+version: 0.1
+commands:
+  prikk:
+      description: Main command
