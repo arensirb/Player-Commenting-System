@@ -39,9 +39,9 @@ public class PropertiesFile {
                 map.put(key, new PropertiesEntry(value, comment));
             }
         } catch (FileNotFoundException e) {
-            PrikkSystem.log.log(Level.SEVERE, "[PrikkSystem]: Cannot read file " + file.getName());
+            PCS.log.log(Level.SEVERE, "[PCS]: Cannot read file " + file.getName());
         } catch (IOException e) {
-            PrikkSystem.log.log(Level.SEVERE, "[PrikkSystem]: Cannot create file " + file.getName());
+            PCS.log.log(Level.SEVERE, "[PCS]: Cannot create file " + file.getName());
         }
     }
 
@@ -70,7 +70,7 @@ public class PropertiesFile {
             try {
                 return Integer.parseInt(map.get(key).value);
             } catch (Exception e) {
-                PrikkSystem.log.log(Level.WARNING, "[PrikkSystem]: Trying to get Integer from " + key + ": " + map.get(key).value);
+                PCS.log.log(Level.WARNING, "[PCS]: Trying to get Integer from " + key + ": " + map.get(key).value);
                 return 0;
             }
         } else {
@@ -85,7 +85,7 @@ public class PropertiesFile {
             try {
                 return Long.parseLong(map.get(key).value);
             } catch (Exception e) {
-                PrikkSystem.log.log(Level.WARNING, "[PrikkSystem]: Trying to get Long from " + key + ": " + map.get(key).value);
+                PCS.log.log(Level.WARNING, "[PCS]: Trying to get Long from " + key + ": " + map.get(key).value);
                 return 0;
             }
         } else {
@@ -100,7 +100,7 @@ public class PropertiesFile {
             try {
                 return Double.parseDouble(map.get(key).value);
             } catch (Exception e) {
-                PrikkSystem.log.log(Level.WARNING, "[PrikkSystem]: Trying to get Double from " + key + ": " + map.get(key).value);
+                PCS.log.log(Level.WARNING, "[PCS]: Trying to get Double from " + key + ": " + map.get(key).value);
                 return 0;
             }
         } else {
@@ -144,7 +144,7 @@ public class PropertiesFile {
             }
             bwriter.flush();
         } catch (IOException e) {
-            PrikkSystem.log.log(Level.SEVERE, "[PrikkSystem]: IO Exception with file " + file.getName());
+            PCS.log.log(Level.SEVERE, "[PCS]: IO Exception with file " + file.getName());
         } finally {
             try {
                 if (bwriter != null) {
@@ -155,7 +155,7 @@ public class PropertiesFile {
                     fwriter.close();
                 }
             } catch (IOException e) {
-                PrikkSystem.log.log(Level.SEVERE, "[PrikkSystem]: IO Exception with file " + file.getName() + " (on close)");
+                PCS.log.log(Level.SEVERE, "[PCS]: IO Exception with file " + file.getName() + " (on close)");
             }
         }
 

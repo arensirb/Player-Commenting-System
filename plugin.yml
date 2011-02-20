@@ -1,6 +1,6 @@
-name: PrikkSystem
-main: no.brisner.PrikkSystem.PrikkSystem
-version: 0.1
+name: Player Commenting System
+main: no.brisner.PCS.PCS
+version: 1.0
 commands:
-  prikk:
+  pcs:
       description: Main command

@@ -35,14 +35,14 @@ public class Permission {
 
     public static boolean isAdmin(Player player) {
         if (permissionsEnabled) {
-            return permission(player, "prikk.admin");
+            return permission(player, "pcs.admin");
         } else {
             return player.isOp();
         }
     }
     public static boolean canLook(Player player) {
         if (permissionsEnabled) {
-            return permission(player, "prikk.admin");
+            return permission(player, "pcs.view");
         } else {
             return player.isOp();
         }

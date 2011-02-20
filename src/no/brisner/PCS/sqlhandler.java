@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import no.brisner.PCS.PrikkSystem;
+import no.brisner.PCS.PCS;
 import no.brisner.PCS.Settings;
 import no.brisner.PCS.datasource.ConnectionManager;
 import no.brisner.PCS.datasource.MyData;
@@ -21,7 +21,7 @@ public class sqlhandler {
 
 	public static void initialize() {
         if (!dataTableExists(!Settings.mysql)) {
-            PrikkSystem.log.info("[PrikkSystem]: Generating prikkdata table");
+            PCS.log.info("[PCS]: Generating data table");
             createDataTable(!Settings.mysql);
         }
     }
@@ -37,7 +37,7 @@ public class sqlhandler {
                 return false;
             return true;
         } catch (SQLException ex) {
-            PrikkSystem.log.log(Level.SEVERE, "[PrikkSystem]: Table Check SQL Exception mysql" , ex);
+            PCS.log.log(Level.SEVERE, "[PCS]: Table Check SQL Exception mysql" , ex);
             return false;
         } finally {
             try {
@@ -46,7 +46,7 @@ public class sqlhandler {
                 if (conn != null) 
                     conn.close();
             } catch (SQLException ex) {
-                PrikkSystem.log.log(Level.SEVERE, "[PrikkSystem]: Table Check SQL Exception (on closing)");
+                PCS.log.log(Level.SEVERE, "[PCS]: Table Check SQL Exception (on closing)");
             }
         }
     }
@@ -60,7 +60,7 @@ public class sqlhandler {
             st.executeUpdate(DATA_TABLE_MYSQL);
             conn.commit();
         } catch (SQLException e) {
-            PrikkSystem.log.log(Level.SEVERE, "[PrikkSystem]: Create Table SQL Exception mysql" + DATA_TABLE_MYSQL, e);
+            PCS.log.log(Level.SEVERE, "[PCS]: Create Table SQL Exception mysql" + DATA_TABLE_MYSQL, e);
         } finally {
             try {
                 if (st != null)
@@ -68,7 +68,7 @@ public class sqlhandler {
                 if (conn != null) 
                     conn.close();
             } catch (SQLException e) {
-                PrikkSystem.log.log(Level.SEVERE, "[PrikkSystem]: Could not create the table (on close)");
+                PCS.log.log(Level.SEVERE, "[PCS]: Could not create the table (on close)");
             }
         }
     }
@@ -88,7 +88,7 @@ public class sqlhandler {
 			System.out.println("SQL; " + st.toString());
 			
 		} catch(SQLException e) {
-			PrikkSystem.log.log(Level.SEVERE, "[PrikkSystem]: Insert Prikk Exception" + st.toString(), e);
+			PCS.log.log(Level.SEVERE, "[PCS]: Insert Exception" + st.toString(), e);
 			return false;
 		}
 		finally {
@@ -98,14 +98,45 @@ public class sqlhandler {
                 if (conn != null) 
                     conn.close();
             } catch (SQLException e) {
-                PrikkSystem.log.log(Level.SEVERE, "[PrikkSystem]: Could not insert prikk-data (on close)");
+                PCS.log.log(Level.SEVERE, "[PCS]: Could not insert (on close)");
                 return false;
             }
 		}
 		return true;
 	}
-	public static boolean removePrikk(String player, int id) { // Fjerner prikk fra spiller
-		return false;
+	public static boolean removePrikk(String player, String id) { // Fjerner prikk fra spiller
+		Connection conn = null;
+		PreparedStatement st = null;
+		String mysqlTable = Settings.mysqlTable;
+		int upd = 0;
+		try {
+			conn = ConnectionManager.getConnection();
+			st = conn.prepareStatement("DELETE FROM " + mysqlTable + " WHERE player = ? AND id = ?");
+			st.setString(1, player);
+			st.setString(2, id);
+			st.executeUpdate();					
+			conn.commit();
+			upd = st.getUpdateCount();
+			System.out.println("[PCS] Delete rows:" + upd);
+		} catch(SQLException e) {
+			PCS.log.log(Level.SEVERE, "[PCS]: Delete Exception" + st.toString(), e);
+			return false;
+		} finally {
+            try {
+                if (st != null)
+                    st.close();
+                if (conn != null) 
+                    conn.close();
+            } catch (SQLException e) {
+                PCS.log.log(Level.SEVERE, "[PCS]: Could not delete (on close)");
+                return false;
+            }
+		}
+		if(upd == 0) {
+			return false;
+		}else {
+			return true;
+		}
 	}
 	public static ArrayList<MyData> listPrikk(String player) { // Henter alle prikker på spiller
 		Connection conn = null;
@@ -115,14 +146,14 @@ public class sqlhandler {
 		ArrayList<MyData> obj = new ArrayList<MyData>();
 		try {
 			conn = ConnectionManager.getConnection();
-			st = conn.prepareStatement("SELECT date,data FROM " + mysqlTable + " WHERE player = ?");
+			st = conn.prepareStatement("SELECT id,date,data FROM " + mysqlTable + " WHERE player = ?");
 			st.setString(1, player);
 			rs = st.executeQuery();
 			while(rs.next()) {
-				obj.add(new MyData(rs.getLong("date"), rs.getString("data")));
+				obj.add(new MyData(rs.getLong("date"), rs.getString("data"), rs.getInt("id")));
 			}	
 		} catch(SQLException e) {
-			PrikkSystem.log.log(Level.SEVERE, "[PrikkSystem]: Retrieve prikk SQL Exception" + DATA_TABLE_MYSQL, e);
+			PCS.log.log(Level.SEVERE, "[PCS]: Retrieve prikk SQL Exception" + DATA_TABLE_MYSQL, e);
 		}
 		finally {
             try {
@@ -131,7 +162,7 @@ public class sqlhandler {
                 if (conn != null) 
                     conn.close();    
             } catch (SQLException e) {
-                PrikkSystem.log.log(Level.SEVERE, "[PrikkSystem]: Could not retrieve prikk-data (on close)");
+                PCS.log.log(Level.SEVERE, "[PCS]: Could not retrieve prikk-data (on close)");
             }
 		}	
 		 return obj;
