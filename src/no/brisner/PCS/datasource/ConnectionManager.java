@@ -1,20 +1,18 @@
 package no.brisner.PCS.datasource;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import com.mysql.jdbc.Driver;
 
 
+import no.brisner.PCS.PCS;
 import no.brisner.PCS.Settings;
 
 public class ConnectionManager {
 
-    public static Connection getConnection() {
+   /* public static Connection getConnection() {
         try {
-        	Class.forName("com.mysql.jdbc.Driver");
+        	Class.forName("com.mysql.jdbc.Driver").newInstance(); 
             Connection conn = DriverManager.getConnection(Settings.mysqlDB,Settings.mysqlUser, Settings.mysqlPass);
             conn.setAutoCommit(false);
             return conn;
@@ -26,15 +24,14 @@ public class ConnectionManager {
             e.printStackTrace();
             return null;
         }
-    }
+    }*/
 
     public static Connection createConnection() {
-    	try {
-    		Class.forName("com.mysql.jdbc.Driver");
-    		 //Settings.mysqlDB, Settings.mysqlUser, Settings.mysqlPass);
-            Connection ret = DriverManager.getConnection(Settings.mysqlDB,Settings.mysqlUser, Settings.mysqlPass);
-            ret.setAutoCommit(false);
-            return ret;
+    		try {	
+    			Class.forName("com.mysql.jdbc.Driver"); 
+    			PCS.DisplayJDBC();
+            Connection conn = DriverManager.getConnection(Settings.mysqlDB,Settings.mysqlUser, Settings.mysqlPass);
+            return conn;
 
         } catch (SQLException e) {
             e.printStackTrace();

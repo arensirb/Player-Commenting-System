@@ -4,6 +4,13 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
+import javax.activation.DataSource;
+
+import org.bukkit.Server;
+
+
+
+
 import no.brisner.PCS.PCS;
 import no.brisner.PCS.Settings;
 import no.brisner.PCS.datasource.ConnectionManager;
@@ -17,19 +24,37 @@ public class sqlhandler {
     + "`data` varchar(150) NOT NULL DEFAULT ''," + "PRIMARY KEY (`id`),"
     + "INDEX(`player`)," +  "INDEX(`date`)" + ") ENGINE=INNODB;";
 
-	public static void initialize() {
-        if (!dataTableExists(!Settings.mysql)) {
+	public static void initialize(Server server) {
+		try {
+	        Connection conn = ConnectionManager.createConnection();
+            if (conn == null) {
+            	PCS.log.log(Level.SEVERE, "[PCS] Could not establish SQL conn2ection. Disabling PCS");
+            	//server.getPluginManager().disablePlugin(server.getPluginManager().getPlugin("PCS"));
+            } else {
+            	PCS.log.log(Level.INFO,"[PCS] MySQL initialization OK!");
+            	try {
+            		conn.close();
+            	} catch (SQLException e) {
+            		e.printStackTrace();
+            	} 
+            }
+    	}catch( Exception e ) {
+    		e.printStackTrace();
+    	}
+            
+      /*  if (!dataTableExists()) {
             PCS.log.info("[PCS]: Generating data table");
-            createDataTable(!Settings.mysql);
-        }
-    }
+            createDataTable();
+        }*/
+	}
 	
-	private static boolean dataTableExists(boolean sqlite) {
+	private static boolean dataTableExists() {
 
         Connection conn = null;
         ResultSet rs = null;
         try {
-            conn = ConnectionManager.getConnection();
+            conn = ConnectionManager.createConnection();
+
             DatabaseMetaData dbm = conn.getMetaData();
             rs = dbm.getTables(null, null, DATA_NAME, null);
             if (!rs.next())
@@ -49,11 +74,11 @@ public class sqlhandler {
             }
         }
     }
-	private static void createDataTable(boolean sqlite) {
+	private static void createDataTable() {
         Connection conn = null;
         Statement st = null;
         try {
-            conn = ConnectionManager.getConnection();
+            conn = ConnectionManager.createConnection();
             st = conn.createStatement();
 
             st.executeUpdate(DATA_TABLE_MYSQL);
@@ -78,7 +103,7 @@ public class sqlhandler {
 		Long epoch = System.currentTimeMillis()/1000;
 		
 		try {
-			conn = ConnectionManager.getConnection();
+			conn = ConnectionManager.createConnection();
 			st = conn.prepareStatement("INSERT INTO `" + mysqlTable + "` (`date`,player,data) VALUES ("+ epoch + ",?,?)");
 			st.setString(1, player);
 			st.setString(2, reason);
@@ -109,7 +134,7 @@ public class sqlhandler {
 		String mysqlTable = Settings.mysqlTable;
 		int upd = 0;
 		try {
-			conn = ConnectionManager.getConnection();
+			conn = ConnectionManager.createConnection();
 			st = conn.prepareStatement("DELETE FROM " + mysqlTable + " WHERE player = ? AND id = ?");
 			st.setString(1, player);
 			st.setString(2, id);
@@ -144,7 +169,7 @@ public class sqlhandler {
 		ResultSet rs;
 		ArrayList<MyData> obj = new ArrayList<MyData>();
 		try {
-			conn = ConnectionManager.getConnection();
+			conn = ConnectionManager.createConnection();
 			st = conn.prepareStatement("SELECT id,date,data FROM " + mysqlTable + " WHERE player = ?");
 			st.setString(1, player);
 			rs = st.executeQuery();

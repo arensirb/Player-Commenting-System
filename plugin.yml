@@ -1,4 +1,4 @@
-name: Player Commenting System
+name: PCS
 main: no.brisner.PCS.PCS
 version: 1.0.1
 commands:

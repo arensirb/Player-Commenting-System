@@ -7,8 +7,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.Server;
 
-
-import com.nijiko.permissions.PermissionHandler;
 import com.nijikokun.bukkit.Permissions.Permissions;
 
 public class Permission {
@@ -25,7 +23,7 @@ public class Permission {
     			log.log(Level.INFO, "[PCS] Permissions activated!");
     		} else {
     			log.log(Level.SEVERE, "[PCS] Permission not installed! PrikkSystem disabled.");
-    			server.getPluginManager().disablePlugin(server.getPluginManager().getPlugin("PrikkSystem"));
+    			server.getPluginManager().disablePlugin(server.getPluginManager().getPlugin("PCS"));
     		}
 
     }
