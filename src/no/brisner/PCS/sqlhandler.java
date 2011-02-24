@@ -82,7 +82,6 @@ public class sqlhandler {
             st = conn.createStatement();
 
             st.executeUpdate(DATA_TABLE_MYSQL);
-            conn.commit();
         } catch (SQLException e) {
             PCS.log.log(Level.SEVERE, "[PCS]: Create Table SQL Exception mysql" + DATA_TABLE_MYSQL, e);
         } finally {
@@ -108,7 +107,6 @@ public class sqlhandler {
 			st.setString(1, player);
 			st.setString(2, reason);
 			st.executeUpdate();
-			conn.commit();
 			System.out.println("SQL; " + st.toString());
 			
 		} catch(SQLException e) {
@@ -139,7 +137,6 @@ public class sqlhandler {
 			st.setString(1, player);
 			st.setString(2, id);
 			st.executeUpdate();					
-			conn.commit();
 			upd = st.getUpdateCount();
 			System.out.println("[PCS] Delete rows:" + upd);
 		} catch(SQLException e) {
